@@ -1,3 +1,8 @@
+// CMDS:
+// npx prisma generate - build prisma object from schema
+// npx prisma studio
+// npx prisma migrate dev --name "comment" - create new snapshot of DB saves history
+
 // 1
 datasource db {
     provider = "sqlite"
