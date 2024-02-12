@@ -3,19 +3,26 @@ import type { Link } from "@prisma/client";
 import type { GraphQLContext } from "./context";
 
 const typeDefinitions = /* GraphQL */ `
-  type Query {
-    info: String!
-    feed: [Link!]!
-  }
-
-  type Mutation {
-    postLink(url: String!, description: String!): Link!
-  }
-
   type Link {
     id: ID!
     description: String!
     url: String!
+  }
+
+  type Comment {
+    id: ID!
+    body: String!
+  }
+
+  type Query {
+    info: String!
+    feed: [Link!]!
+    comment(id: ID!): Comment
+  }
+
+  type Mutation {
+    postLink(url: String!, description: String!): Link!
+    postCommentOnLink(linkId: ID!, body: String!): Comment!
   }
 `;
 
