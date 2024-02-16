@@ -1,6 +1,8 @@
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import type { Link } from "@prisma/client";
 import type { GraphQLContext } from "./context";
+import { GraphQLError } from "graphql";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 const typeDefinitions = /* GraphQL */ `
   type Query {
@@ -44,11 +46,15 @@ const resolvers = {
       });
     },
     link: (parent: unknown, args: { id: string }, context: GraphQLContext) => {
-      return context.prisma.link.findUnique({
-        where: {
-          id: parseInt(args.id),
-        },
-      });
+      try {
+        return context.prisma.link.findUniqueOrThrow({
+          where: {
+            id: parseInt(args.id),
+          },
+        });
+      } catch (error) {
+        throw new Error(`Link of ID: ${args.id}, could not be found`);
+      }
     },
   },
   Link: {
@@ -83,14 +89,28 @@ const resolvers = {
       args: { linkId: string; body: string },
       context: GraphQLContext
     ) {
-      const newComment = await context.prisma.comment.create({
-        data: {
-          linkId: parseInt(args.linkId),
-          body: args.body,
-        },
-      });
+      const comment = await context.prisma.comment
+        .create({
+          data: {
+            body: args.body,
+            linkId: parseInt(args.linkId),
+          },
+        })
+        .catch((err: unknown) => {
+          if (
+            err instanceof PrismaClientKnownRequestError &&
+            err.code === "P2003"
+          ) {
+            return Promise.reject(
+              new GraphQLError(
+                `Cannot post comment on non-existing link with id '${args.linkId}'.`
+              )
+            );
+          }
+          return Promise.reject(err);
+        });
 
-      return newComment;
+      return comment;
     },
   },
 };
