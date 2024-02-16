@@ -1,7 +1,14 @@
 import { createServer } from "http";
 import { createYoga } from "graphql-yoga";
 import { createContext } from "./context";
-import { schema } from "./schema";
+import { makeExecutableSchema } from "@graphql-tools/schema";
+import { typeDefinitions } from "./schema/hacker-news";
+import { resolvers } from "./resolvers";
+
+const schema = makeExecutableSchema({
+  resolvers: [resolvers],
+  typeDefs: [typeDefinitions],
+});
 
 function main() {
   const yoga = createYoga({ schema, context: createContext });
@@ -11,4 +18,3 @@ function main() {
   });
 }
 
-main();
