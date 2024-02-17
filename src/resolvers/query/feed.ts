@@ -1,4 +1,5 @@
 import { GraphQLContext } from "../../context";
+import { applyTakeConstraints } from "../../util";
 
 export const feedResolver = (
   parent: unknown,
@@ -15,9 +16,15 @@ export const feedResolver = (
       }
     : {};
 
+  const defaultTakeValues = applyTakeConstraints({
+    min: 1,
+    max: 50,
+    value: take ?? 30,
+  });
+
   return context.prisma.link.findMany({
     where,
     skip,
-    take,
+    take: defaultTakeValues,
   });
 };
