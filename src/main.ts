@@ -2,7 +2,7 @@ import { createServer } from "http";
 import { createYoga } from "graphql-yoga";
 import { createContext } from "./context";
 import { makeExecutableSchema } from "@graphql-tools/schema";
-import { typeDefinitions } from "./schema/hacker-news";
+import { typeDefinitions } from "./schema/type-defs";
 import { resolvers } from "./resolvers";
 
 const schema = makeExecutableSchema({
@@ -18,3 +18,4 @@ function main() {
   });
 }
 
+main();

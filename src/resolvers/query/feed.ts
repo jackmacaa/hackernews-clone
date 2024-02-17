@@ -2,8 +2,22 @@ import { GraphQLContext } from "../../context";
 
 export const feedResolver = (
   parent: unknown,
-  args: {},
+  args: { filterNeedle?: string; skip?: number; take?: number },
   context: GraphQLContext
 ) => {
-  return context.prisma.link.findMany();
+  const { filterNeedle, skip, take } = args;
+  const where = filterNeedle
+    ? {
+        OR: [
+          { description: { contains: filterNeedle } },
+          { url: { contains: filterNeedle } },
+        ],
+      }
+    : {};
+
+  return context.prisma.link.findMany({
+    where,
+    skip,
+    take,
+  });
 };

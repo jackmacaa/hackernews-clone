@@ -1,12 +1,10 @@
-import { Link } from "@prisma/client";
-import { GraphQLContext } from "../context";
-import { postLinkResolver } from "./mutation/post-link";
-import { postLinkOnCommentResolver } from "./mutation/post-link-on-comment";
 import { commentResolver } from "./query/comment";
+import { commentsResolver } from "./query/link/comments";
 import { feedResolver } from "./query/feed";
 import { infoResolver } from "./query/info";
 import { linkResolver } from "./query/link";
-import { commentsResolver } from "./query/link/comments";
+import { postLinkResolver } from "./mutation/post-link";
+import { postLinkOnCommentResolver } from "./mutation/post-link-on-comment";
 
 export const resolvers = {
   Query: {

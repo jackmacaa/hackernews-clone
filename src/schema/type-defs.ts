@@ -1,9 +1,10 @@
 export const typeDefinitions = /* GraphQL */ `
   type Query {
     info: String!
-    feed: [Link!]!
     comment(id: ID!): Comment
     link(id: ID): Link
+    feed(filterNeedle: String, skip: Int, take: Int): [Link!]!
+    # me: User!
   }
 
   type Mutation {
