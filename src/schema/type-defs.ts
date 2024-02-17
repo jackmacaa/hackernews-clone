@@ -10,6 +10,15 @@ export const typeDefinitions = /* GraphQL */ `
   type Mutation {
     postLink(url: String!, description: String!): Link!
     postCommentOnLink(linkId: ID!, body: String!): Comment!
+    signup(email: String!, password: String!, name: String!): AuthPayload
+    login(email: String!, password: String!): AuthPayload
+  }
+
+  type User {
+    id: ID!
+    name: String!
+    email: String!
+    links: [Link!]!
   }
 
   type Link {
@@ -17,6 +26,12 @@ export const typeDefinitions = /* GraphQL */ `
     description: String!
     url: String!
     comments: [Comment!]!
+    postedBy: User
+  }
+
+  type AuthPayload {
+    token: String
+    user: User
   }
 
   type Comment {
