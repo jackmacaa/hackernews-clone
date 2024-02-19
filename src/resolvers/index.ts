@@ -5,8 +5,9 @@ import { infoResolver } from "./query/info";
 import { linkResolver } from "./query/link";
 import { postLinkResolver } from "./mutation/post-link";
 import { postLinkOnCommentResolver } from "./mutation/post-link-on-comment";
+import { Resolvers } from "../generated/graphql";
 
-export const resolvers = {
+export const resolvers: Resolvers = {
   Query: {
     info: infoResolver,
     feed: feedResolver,

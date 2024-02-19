@@ -1,9 +1,11 @@
 import { GraphQLContext } from "../../context";
+import { MutationResolvers } from "../../generated/graphql";
+import { transformToLinks } from "../../transformers";
 
-export const postLinkResolver = async (
-  parent: unknown,
-  args: { description: string; url: string },
-  context: GraphQLContext
+export const postLinkResolver: MutationResolvers["postLink"] = async (
+  _root,
+  args,
+  context: GraphQLContext,
 ) => {
   const newLink = await context.prisma.link.create({
     data: {
@@ -11,5 +13,6 @@ export const postLinkResolver = async (
       description: args.description,
     },
   });
-  return newLink;
+
+  return transformToLinks([newLink])[0];
 };

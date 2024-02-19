@@ -1,16 +1,27 @@
 import { GraphQLContext } from "../../context";
+import { QueryResolvers } from "../../generated/graphql";
+import { transformToLinks } from "../../transformers";
 import { applyTakeConstraints } from "../../util";
 
-export const feedResolver = (
-  parent: unknown,
-  args: { filterNeedle?: string; skip?: number; take?: number },
-  context: GraphQLContext
+export const feedResolver: QueryResolvers["feed"] = async (
+  _root,
+  args,
+  context: GraphQLContext,
+  _info,
 ) => {
+  if (!args.skip) {
+    args.skip = 0;
+  }
   const { filterNeedle, skip, take } = args;
+
   const where = filterNeedle
     ? {
         OR: [
-          { description: { contains: filterNeedle } },
+          {
+            description: {
+              contains: filterNeedle,
+            },
+          },
           { url: { contains: filterNeedle } },
         ],
       }
@@ -22,9 +33,11 @@ export const feedResolver = (
     value: take ?? 30,
   });
 
-  return context.prisma.link.findMany({
+  const feeds = await context.prisma.link.findMany({
     where,
     skip,
     take: defaultTakeValues,
   });
+
+  return transformToLinks(feeds);
 };

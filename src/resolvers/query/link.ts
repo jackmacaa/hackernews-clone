@@ -1,17 +1,17 @@
 import { GraphQLContext } from "../../context";
+import { QueryResolvers } from "../../generated/graphql";
+import { transformToLinks } from "../../transformers";
 
-export const linkResolver = (
-  parent: unknown,
-  args: { id: string },
-  context: GraphQLContext
+export const linkResolver: QueryResolvers["link"] = async (
+  _root,
+  args,
+  context: GraphQLContext,
 ) => {
-  try {
-    return context.prisma.link.findUniqueOrThrow({
-      where: {
-        id: parseInt(args.id),
-      },
-    });
-  } catch (error) {
-    throw new Error(`Link of ID: ${args.id}, could not be found`);
-  }
+  const link = await context.prisma.link.findUniqueOrThrow({
+    where: {
+      id: parseInt(args.id),
+    },
+  });
+
+  return transformToLinks([link])[0];
 };

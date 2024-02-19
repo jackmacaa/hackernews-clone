@@ -1,14 +1,16 @@
-import { Link } from "@prisma/client";
 import { GraphQLContext } from "../../../context";
+import { LinkResolvers } from "../../../generated/graphql";
 
-export const commentsResolver = async (
-  parent: Link,
-  args: {},
-  context: GraphQLContext
+export const commentsResolver: LinkResolvers["comments"] = async (
+  parent,
+  _args,
+  context: GraphQLContext,
 ) => {
-  return context.prisma.comment.findMany({
+  const comments = await context.prisma.comment.findMany({
     where: {
       linkId: parent.id,
     },
   });
+
+  return comments;
 };

@@ -1,1 +1,1 @@
-export const APP_SECRET = 'this is my secret'
+export const APP_SECRET = "this is my secret";
