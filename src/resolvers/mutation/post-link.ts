@@ -5,7 +5,7 @@ import { transformToLinks } from "../../transformers";
 export const postLinkResolver: MutationResolvers["postLink"] = async (
   _root,
   args,
-  context: GraphQLContext,
+  context,
 ) => {
   const newLink = await context.prisma.link.create({
     data: {
